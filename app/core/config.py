@@ -13,6 +13,9 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str | None = None
 
+    SECRET_KEY: str
+    ALGORITHM: str
+
     def model_post_init(self, __context):
         self.DATABASE_URL = (
             f"postgresql+asyncpg://{self.DB_USER}:"
