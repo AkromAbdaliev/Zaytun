@@ -33,7 +33,6 @@ class SUserUpdateForUser(BaseModel):
     phone: str | None = None
     location: Geopoint | None = None  # WKT representation of the location
     username: str | None = None
-    model_config = ConfigDict(from_attributes=True)
 
 
 class SUserChangePassword(BaseModel):

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, status
 
-from app.users.schemas import SUserCreate, SUserRead
+from app.core.exceptions import UserNotFoundException
+from app.users.schemas import SUserCreate, SUserRead, SUserUpdateForUser
 from app.users.service import UserService
 
 router = APIRouter(
@@ -27,11 +28,22 @@ async def create_user(user_data: SUserCreate):
     return SUserRead.model_validate(new_user)
 
 
-@router.put("/{user_id}")
-async def update_user(user_id: int):
-    return {"message": f"User {user_id} updated"}
+@router.put("/{user_id}", response_model=SUserRead)
+async def update_user(
+    user_id: int,
+    user_data: SUserUpdateForUser,
+):
+    user = await UserService.find_by_id(user_id)
+    if not user:
+        raise UserNotFoundException
+
+    return await UserService.update_user(user, user_data)
 
 
-@router.delete("/{user_id}")
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: int):
-    return {"message": f"User {user_id} deleted"}
+    existing_user = await UserService.find_by_id(user_id)
+    if not existing_user:
+        raise UserNotFoundException
+    await UserService.delete_one(existing_user)
+    return
