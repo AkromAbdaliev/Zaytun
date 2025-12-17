@@ -38,7 +38,6 @@ class SUserUpdateForUser(BaseModel):
 class SUserChangePassword(BaseModel):
     old_password: str
     new_password: str
-    model_config = ConfigDict(from_attributes=True)
 
 
 class SUserUpdateForAdmin(BaseModel):
@@ -48,4 +47,3 @@ class SUserUpdateForAdmin(BaseModel):
     username: str | None = None
     is_verified: bool | None = None
     is_active: bool | None = None
-    model_config = ConfigDict(from_attributes=True)

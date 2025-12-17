@@ -12,10 +12,6 @@ class UserService(BaseService):
 
     @classmethod
     async def create_user(cls, user_create: SUserCreate) -> User:
-        existing = await cls.find_one_or_none(email=user_create.email)
-        if existing:
-            raise UserAlreadyExistsException
-
         data = user_create.model_dump(
             exclude_unset=True, exclude={"password", "location"}
         )
@@ -31,9 +27,10 @@ class UserService(BaseService):
     @classmethod
     async def update_user(
         cls,
-        instance: User,
+        user: User,
         data_in: SUserUpdateForUser,
     ) -> User:
+
         data = data_in.model_dump(
             exclude_unset=True,
             exclude={"location"},
@@ -43,6 +40,6 @@ class UserService(BaseService):
             data["location"] = data_in.location.to_wkt()
 
         try:
-            return await cls.update_one(instance, **data)
+            return await cls.update_one(user, **data)
         except IntegrityError:
             raise UserAlreadyExistsException
