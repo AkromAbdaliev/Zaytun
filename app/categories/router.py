@@ -28,10 +28,10 @@ async def get_category(category_id: int):
 
 @router.post("", response_model=SCategoryRead, status_code=status.HTTP_201_CREATED)
 async def create_category(category_data: SCategoryCreate):
-    existing_category = CategoryService.find_one_or_none(category_data.name)
+    existing_category = await CategoryService.find_one_or_none(name=category_data.name)
     if existing_category:
         raise CategoryAlreadyExistsException
-    return await CategoryService.add_one(category_data)
+    return await CategoryService.add_one(**category_data.model_dump())
 
 
 @router.put(
@@ -41,7 +41,9 @@ async def update_category(category_id: int, category_data: SCategoryCreate):
     existing_category = CategoryService.find_by_id(category_id)
     if not existing_category:
         raise CategoryNotFoundException
-    return await CategoryService.update_one(existing_category, category_data)
+    return await CategoryService.update_one(
+        existing_category, **category_data.model_dump()
+    )
 
 
 @router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)

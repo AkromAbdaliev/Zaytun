@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict
 
 class SCategoryRead(BaseModel):
     id: int
+    parent_id: int | None = None
     name: str
     description: str | None = None
     images: str | None = None
@@ -10,6 +11,7 @@ class SCategoryRead(BaseModel):
 
 
 class SCategoryCreate(BaseModel):
+    parent_id: int | None = None
     name: str
     description: str | None = None
     images: str | None = None
