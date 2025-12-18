@@ -15,18 +15,18 @@ async def get_users():
     return await UserService.find_all()
 
 
-@router.get(
-    "/{user_id}",
-    response_model=SUserRead,
-)
+@router.get("/{user_id}", response_model=SUserRead)
 async def get_user(user_id: int):
-    return await UserService.find_by_id(user_id)
+    user = await UserService.find_by_id(user_id)
+    if not user:
+        raise UserNotFoundException
+    return user
 
 
 @router.post("", response_model=SUserRead, status_code=status.HTTP_201_CREATED)
 async def create_user(user_data: SUserCreate):
-    existing = await UserService.find_one_or_none(email=user_data.email)
-    if existing:
+    existing_user = await UserService.find_one_or_none(email=user_data.email)
+    if existing_user:
         raise UserAlreadyExistsException
     return await UserService.create_user(user_data)
 
@@ -34,14 +34,11 @@ async def create_user(user_data: SUserCreate):
 @router.put(
     "/{user_id}", response_model=SUserRead, status_code=status.HTTP_202_ACCEPTED
 )
-async def update_user(
-    user_id: int,
-    user_data: SUserUpdateForUser,
-):
-    user = await UserService.find_by_id(user_id)
-    if not user:
+async def update_user(user_id: int, user_data: SUserUpdateForUser):
+    existing_user = await UserService.find_by_id(user_id)
+    if not existing_user:
         raise UserNotFoundException
-    return await UserService.update_user(user, user_data)
+    return await UserService.update_user(existing_user, user_data)
 
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
