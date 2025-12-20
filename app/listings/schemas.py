@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.core.schemas import Geopoint
 
@@ -21,3 +21,4 @@ class SListingRead(BaseModel):
     is_active: bool
     price: int
     description: str | None = None
+    model_config = ConfigDict(from_attributes=True)

@@ -13,3 +13,6 @@ CategoryNotFoundException = HTTPException(
 CategoryAlreadyExistsException = HTTPException(
     status_code=status.HTTP_409_CONFLICT, detail="Category already exists"
 )
+ListingNotFoundException = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND, detail="Listing not found"
+)

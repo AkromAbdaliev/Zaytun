@@ -21,7 +21,8 @@ class UserService(BaseService):
 
         try:
             return await cls.add_one(**data)
-        except IntegrityError:
+        except IntegrityError as e:
+            print(e.orig)  # PostgreSQL error message
             raise UserAlreadyExistsException
 
     @classmethod
