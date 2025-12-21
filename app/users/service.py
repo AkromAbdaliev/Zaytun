@@ -2,9 +2,9 @@ from sqlalchemy.exc import IntegrityError
 
 from app.core.exceptions import UserAlreadyExistsException
 from app.services.base import BaseService
-from app.users.auth import get_password_hash
 from app.users.model import User
 from app.users.schemas import SUserCreate, SUserUpdateForUser
+from app.users.security import get_password_hash
 
 
 class UserService(BaseService):

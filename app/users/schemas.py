@@ -47,3 +47,8 @@ class SUserUpdateForAdmin(BaseModel):
     username: str | None = None
     is_verified: bool | None = None
     is_active: bool | None = None
+
+
+class SUserLogin(BaseModel):
+    email: EmailStr
+    password: str
