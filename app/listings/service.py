@@ -16,6 +16,8 @@ class ListingService(BaseService):
             exclude_unset=True,
             exclude={"location"},
         )
+        if listing_create.location:
+            data["location"] = listing_create.location.to_wkt()
         return await cls.add_one(**data)
 
     @classmethod
@@ -28,4 +30,6 @@ class ListingService(BaseService):
             exclude_unset=True,
             exclude={"location"},
         )
+        if listing_update.location:
+            data["location"] = listing_update.location.to_wkt()
         return await cls.update_one(existing_listing, **data)
