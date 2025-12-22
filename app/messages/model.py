@@ -9,7 +9,7 @@ class Message(Base):
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("user.id"), index=True, nullable=False)
     receiver_id = Column(Integer, ForeignKey("user.id"), index=True, nullable=False)
-    listing_id = Column(Integer, ForeignKey("listing.id"), index=True, nullable=True)
+    listing_id = Column(Integer, ForeignKey("listing.id"), index=True, nullable=False)
     content = Column(String, nullable=False)
     is_read = Column(Boolean, default=False)
     created_at = Column(
