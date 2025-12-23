@@ -6,12 +6,13 @@ from pydantic import EmailStr
 
 from app.core.config import settings
 from app.core.exceptions import (
+    ForbiddenException,
     InvalidTokenFormatException,
     TokenExpiredException,
     UnauthorizedException,
     UserNotFoundException,
 )
-from app.users.model import User
+from app.users.model import User, UserRole
 from app.users.security import verify_password
 from app.users.service import UserService
 
@@ -51,3 +52,12 @@ async def authenticate_user(email: EmailStr, password: str) -> User:
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
+
+
+def require_roles(*roles: UserRole):
+    async def role_checker(current_user=Depends(get_current_user)):
+        if current_user.role not in roles:
+            raise ForbiddenException
+        return current_user
+
+    return role_checker

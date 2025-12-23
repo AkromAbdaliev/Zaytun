@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from app.core.exceptions import UserAlreadyExistsException
 from app.services.base import BaseService
 from app.users.model import User
-from app.users.schemas import SUserCreate, SUserUpdateForUser
+from app.users.schemas import SUserCreate, SUserUpdateForAdmin
 from app.users.security import get_password_hash
 
 
@@ -29,7 +29,7 @@ class UserService(BaseService):
     async def update_user(
         cls,
         user: User,
-        data_in: SUserUpdateForUser,
+        data_in: SUserUpdateForAdmin,
     ) -> User:
 
         data = data_in.model_dump(
