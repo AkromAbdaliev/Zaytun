@@ -26,6 +26,22 @@ async def get_inbox(current_user=Depends(get_current_user)):
     return await MessageService.get_inbox(current_user.id)
 
 
+@router.get(
+    "/thread/{listing_id}/{other_user_id}",
+    response_model=list[SMessageRead],
+)
+async def get_thread(
+    listing_id: int,
+    other_user_id: int,
+    current_user=Depends(get_current_user),
+):
+    return await MessageService.get_thread(
+        current_user.id,
+        other_user_id,
+        listing_id,
+    )
+
+
 @router.patch("/{message_id}/read", status_code=status.HTTP_204_NO_CONTENT)
 async def mark_message_as_read(
     message_id: int,
