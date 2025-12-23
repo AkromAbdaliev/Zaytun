@@ -1,5 +1,6 @@
 from geoalchemy2 import Geography
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -8,7 +9,9 @@ class Listing(Base):
     __tablename__ = "listing"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.id"), index=True, nullable=False)
+    user_id = Column(
+        Integer, ForeignKey("user.id", ondelete="CASCADE"), index=True, nullable=False
+    )
     category_id = Column(Integer, ForeignKey("category.id"), index=True, nullable=False)
     location = Column(Geography(geometry_type="POINT", srid=4326), nullable=True)
     title = Column(String, index=True, nullable=False)
@@ -26,3 +29,6 @@ class Listing(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    # Optional: Add relationship for ORM convenience
+    user = relationship("User", back_populates="listings")
